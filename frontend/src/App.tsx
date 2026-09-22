@@ -1,6 +1,6 @@
 import { Admin, Resource } from "react-admin";
 import { Layout } from "./Layout";
-import {listarProductos} from "./Productos"
+import {listarProductos, editarProductos, crearProductos} from "./Productos"
 import {dataProvider} from "./dataProvider"
 
 export const App = () => (
@@ -8,6 +8,8 @@ export const App = () => (
         <Resource
             name="Productos"
             list={listarProductos}
+            edit={editarProductos}
+            create={crearProductos}
         />
     </Admin>
 );
