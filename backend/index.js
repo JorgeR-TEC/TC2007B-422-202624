@@ -2,7 +2,7 @@ const express=require("express");
 const MongoClient= require("mongodb").MongoClient;
 var cors=require("cors");
 const bodyParser=require("body-parser")
-
+const argon2=require("argon2");
 const app=express();
 const PORT=3000;
 let db;
@@ -99,6 +99,21 @@ app.post("/Productos/", async(req, res)=>{
 });
 
 
+app.post("/registrarse", async(req, res)=>{
+	let user=req.body.username;
+	let pass=req.body.password;
+	console.log(req.body.password)
+	let data=await db.collection("usuarios").findOne({"usuario":user});
+	console.log(data)
+	if (data==null){
+		const hash=await argon2.hash(pass, {type: argon2.argon2id, memoryCost: 64*1024, timeCost:3, parallelism:1, saltLength:128});
+		let usuarioAgregar={"usuario": user, "password": hash}
+		data=await db.collection("usuarios").insertOne(usuarioAgregar);
+		res.sendStatus(201);
+	}else{
+		res.sendStatus(403);
+	}
+})
 
 
 
